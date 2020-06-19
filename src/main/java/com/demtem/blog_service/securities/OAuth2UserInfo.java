@@ -17,8 +17,12 @@ public class OAuth2UserInfo {
         return (String) attributes.get("sub");
     }
 
-    public String getName(){
-        return (String) attributes.get("name");
+    public String getFirstName(){
+        return (String) attributes.get("given_name");
+    }
+
+    public String getLastName(){
+        return (String) attributes.get("family_name");
     }
 
     public String getEmail() {

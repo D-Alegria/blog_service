@@ -47,19 +47,24 @@ public class CustomUserDetailsService extends DefaultOAuth2UserService {
             throw new OAuth2AuthenticationProcessingException("Email not found from OAuth2 provider");
         }
 
-        User user = registerNewUser(oAuth2UserRequest, oAuth2UserInfo);
-
+        User user = updateOrCreateUser(oAuth2UserInfo);
 
         return UserPrincipal.create(user, oAuth2User.getAttributes());
     }
 
-    private User registerNewUser(OAuth2UserRequest oAuth2UserRequest, OAuth2UserInfo oAuth2UserInfo){
-        User user = new User();
+    private User updateOrCreateUser(OAuth2UserInfo oAuth2UserInfo){
+        User user = userRepository.findByEmail(oAuth2UserInfo.getEmail());
+
+        if (user == null){
+            user = new User();
+        }
 
         user.setProviderId(oAuth2UserInfo.getId());
-        user.setFirstName(oAuth2UserInfo.getName());
+        user.setFirstName(oAuth2UserInfo.getFirstName());
+        user.setLastName(oAuth2UserInfo.getLastName());
         user.setEmail(oAuth2UserInfo.getEmail());
 
         return userRepository.save(user);
     }
+
 }
